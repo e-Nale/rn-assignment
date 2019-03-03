@@ -1,5 +1,13 @@
 # rn-assignment
 
+### Installation
+
+```sh
+$ git clone https://github.com/e-Nale/rn-assignment
+$ cd rn-assignment
+$ npm install
+$ npm run android | npm run-ios
+```
 ### Development Environment
 
 - Windows
