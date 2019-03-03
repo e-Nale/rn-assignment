@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import {Platform, 
   StyleSheet, 
   Text,
@@ -8,12 +9,13 @@ import {Platform,
   ActivityIndicator,
   Keyboard,
   AsyncStorage} from 'react-native';
+import { saveToken } from './store/actions/index'
 
 const BASE_URL = 'https://a6e6qa6e5f.execute-api.eu-west-3.amazonaws.com/dev/flappaccount';
 const ACCESS_TOKEN = 'access_token';
 
 type Props = {};
-export default class Home extends React.Component<Props> {
+class Home extends React.Component<Props> {
 
   static navigationOptions = {
     title: 'Register',
@@ -56,11 +58,11 @@ export default class Home extends React.Component<Props> {
    * Get data from AsyncStorage, and if user
    * exists navigate to Map screen 
    */
-  retrieveData = async () => {
+  retrieveData = async () => {    
     try{
       let user = await AsyncStorage.getItem('user');
-      let parsed = JSON.parse(user);
-      if(parsed.name != null){
+      let parsed = JSON.parse(user);      
+      if(this.props.onRegister(parsed.name) != null){
         this.props.navigation.navigate('Map', {
         latitude: parsed.latitude,
         longitude: parsed.longitude,
@@ -196,7 +198,7 @@ export default class Home extends React.Component<Props> {
         </View>
       )
     } else { 
-    return (                     
+    return (                   
       <View style={styles.container}>
         <Text style={styles.welcome}>
         Registration Form
@@ -267,3 +269,17 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   }
 });
+
+const mapStateToProps = state => {
+  return {
+    name: state.name.name
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onRegister: (name) => dispatch(saveToken(name))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
